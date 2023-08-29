@@ -14,3 +14,5 @@ node_modules
 *.gz
 # folder Readme
 Readme/
+# dotenv
+.env
