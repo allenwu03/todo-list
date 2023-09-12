@@ -21,7 +21,7 @@ router.get('/:id' , (req, res) => {
         .catch(error => console.log(error))
 })
 
-router.put('/:id/edit' , (req,res) =>{
+router.get('/:id/edit' , (req,res) =>{
     const id = req.params.id
     return Todo.findById(id)
         .lean()
