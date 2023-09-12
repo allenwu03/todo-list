@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose') //載入mongoose
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override') // 載入method-override
 
 // 僅在非正式環境時(非Production正式機)，使用dotenv
 if(process.env.NODE_ENV != 'production'){
@@ -28,6 +29,8 @@ app.set('view engine','hbs')
 
 app.use(bodyParser.urlencoded({extended:true}))
 
+app.use(methodOverride('_method')) // 設定每一筆請求都會透過methodOverride進行前置處理
+
 //設定路由
 //Todo首頁
 app.get('/',(req,res) =>{
@@ -42,7 +45,7 @@ app.get('/todos/new',(req,res)=>{
     return res.render('new')
 })
 
-app.post('/todos',(req,res) => {
+app.post('/todos', (req,res) => {
     const name = req.body.name //從req.body拿出表單裡的name資料
     return Todo.create({name}) //存入資料庫
         .then(() => res.redirect('/')) //新增完成後導回首頁
@@ -65,7 +68,7 @@ app.get('/todos/:id/edit' , (req,res) =>{
         .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/edit' , (req,res) => {
+app.put('/todos/:id' , (req,res) => {
     const id = req.params.id
     const {name,isDone} = req.body
     return Todo.findById(id)
@@ -78,7 +81,7 @@ app.post('/todos/:id/edit' , (req,res) => {
         .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/delete' , (req,res) => {
+app.delete('/todos/:id' , (req,res) => {
     const id = req.params.id
     return Todo.findById(id)
         .then(todo => todo.remove())
